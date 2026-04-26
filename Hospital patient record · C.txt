@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+typedef struct {
+    int id;
+    char name[50];
+    int age;
+    char gender[10];
+    char disease[100];
+    char doctor[50];
+    char date[20];
+    float bill;
+} Patient;
+
+Patient patients[MAX];
+int count = 0;
+
+void addPatient() {
+    if (count >= MAX) {
+        printf("Hospital full!\n");
+        return;
+    }
+    Patient p;
+    p.id = count + 1;
+    printf("Enter patient name: ");
+    scanf(" %[^\n]", p.name);
+    printf("Enter age: ");
+    scanf("%d", &p.age);
+    printf("Enter gender (Male/Female): ");
+    scanf(" %s", p.gender);
+    printf("Enter disease/diagnosis: ");
+    scanf(" %[^\n]", p.disease);
+    printf("Enter doctor name: ");
+    scanf(" %[^\n]", p.doctor);
+    printf("Enter admission date (DD/MM/YYYY): ");
+    scanf(" %s", p.date);
+    printf("Enter bill amount (Rs.): ");
+    scanf("%f", &p.bill);
+    patients[count++] = p;
+    printf("\nPatient added! ID: %d\n", p.id);
+}
+
+void displayAll() {
+    if (count == 0) {
+        printf("No patients found.\n");
+        return;
+    }
+    printf("\n======== ALL PATIENTS ========\n");
+    for (int i = 0; i < count; i++) {
+        printf("\nID      : %d\n", patients[i].id);
+        printf("Name    : %s\n", patients[i].name);
+        printf("Age     : %d\n", patients[i].age);
+        printf("Gender  : %s\n", patients[i].gender);
+        printf("Disease : %s\n", patients[i].disease);
+        printf("Doctor  : %s\n", patients[i].doctor);
+        printf("Date    : %s\n", patients[i].date);
+        printf("Bill    : Rs. %.2f\n", patients[i].bill);
+        printf("------------------------------\n");
+    }
+}
+
+void searchPatient() {
+    int id;
+    printf("Enter patient ID: ");
+    scanf("%d", &id);
+    for (int i = 0; i < count; i++) {
+        if (patients[i].id == id) {
+            printf("\n--- Patient Found ---\n");
+            printf("Name    : %s\n", patients[i].name);
+            printf("Age     : %d\n", patients[i].age);
+            printf("Disease : %s\n", patients[i].disease);
+            printf("Doctor  : %s\n", patients[i].doctor);
+            printf("Bill    : Rs. %.2f\n", patients[i].bill);
+            return;
+        }
+    }
+    printf("Patient not found!\n");
+}
+
+void updateBill() {
+    int id;
+    float newBill;
+    printf("Enter patient ID: ");
+    scanf("%d", &id);
+    for (int i = 0; i < count; i++) {
+        if (patients[i].id == id) {
+            printf("Current bill: Rs. %.2f\n", patients[i].bill);
+            printf("Enter new bill amount: Rs. ");
+            scanf("%f", &newBill);
+            patients[i].bill = newBill;
+            printf("Bill updated successfully!\n");
+            return;
+        }
+    }
+    printf("Patient not found!\n");
+}
+
+void displayByDoctor() {
+    char doc[50];
+    printf("Enter doctor name: ");
+    scanf(" %[^\n]", doc);
+    int found = 0;
+    printf("\n--- Patients under Dr. %s ---\n", doc);
+    for (int i = 0; i < count; i++) {
+        if (strcmp(patients[i].doctor, doc) == 0) {
+            printf("ID: %d | Name: %s | Disease: %s\n",
+                patients[i].id, patients[i].name, patients[i].disease);
+            found = 1;
+        }
+    }
+    if (!found) printf("No patients found for this doctor.\n");
+}
+
+int main() {
+    int choice;
+    printf("=====================================\n");
+    printf("    Hospital Patient Record System   \n");
+    printf("    Developed by: Rabbia Butt        \n");
+    printf("=====================================\n");
+
+    do {
+        printf("\n1. Add Patient\n");
+        printf("2. Display All Patients\n");
+        printf("3. Search Patient by ID\n");
+        printf("4. Update Patient Bill\n");
+        printf("5. View Patients by Doctor\n");
+        printf("0. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1: addPatient(); break;
+            case 2: displayAll(); break;
+            case 3: searchPatient(); break;
+            case 4: updateBill(); break;
+            case 5: displayByDoctor(); break;
+            case 0: printf("Goodbye!\n"); break;
+            default: printf("Invalid choice!\n");
+        }
+    } while(choice != 0);
+
+    return 0;
+}
